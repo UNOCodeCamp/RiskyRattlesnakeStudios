@@ -41,6 +41,7 @@ game.update = function()
 		game.score += 1;
 		enemy.move();
 	}
+	player.isAttacking=false
 		
 	game.startTime = Date.now();
 	
