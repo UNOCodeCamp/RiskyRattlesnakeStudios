@@ -8,6 +8,8 @@ game.level = 0;
 
 game.start = function()
 {
+    var level = maps[game.level]
+    scene.setScene(level);
     game.startTime = Date.now();
     input.start();
     game.main();
@@ -20,22 +22,44 @@ game.main = function()
     {
         game.update();
         renderer.draw();
-        window.requestAnimationFrame(game.main);
+        
+    } else {
+        renderer.drawGameOver();
     }
-
+    window.requestAnimationFrame(game.main);
 };
 
 // Update game objects
 game.update = function() 
 {
     player.move(input.x, input.y);
+    
+    if (exit.isTouching(player))
+    {
+        game.level++
+        if (game.level < maps.length)
+        {
+            var level = maps[game.level]
+            scene = new Scene();
+            scene.setScene(level);
+        }
+        else
+        {
+            game.isOver = true;
+            alert("Mama pig does not want you anymore") 
+        }
+    }
+    
+    if (game.level == 9) {
+        
+    }
 
     for ( i in scene.hazards)
     {
         var hazard = scene.hazards[i];
         if ( hazard.isTouching(player) )
         {
-            game.isOver = true;
+            game.isOver = true
         }
     }
 };

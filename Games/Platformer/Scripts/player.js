@@ -1,3 +1,5 @@
+
+
 var friction = 0.8;                 
 var gravity = 0.3;
 const TERMINAL = 8;                 
@@ -9,16 +11,24 @@ player.y = null;
 player.width = 32;                  
 player.height = 32;                 
 player.image = new Image();
-player.image.src = "";
+player.image.src = "Assets/charRight1.png";
 player.health = 100;
-player.speed = 4;
+player.speed = 4;     
 player.velX = 0;                    
 player.velY = 0;                    
-player.isJumping = false;   
-
+player.isJumping = false;
+player.poses = {}          
+player.poses['right'] = new Animation(['Assets/charRight0.png','Assets/charRight1.png']);
+player.poses['left'] = new Animation(['Assets/charLeft0.png','Assets/charLeft1.png']);
+player.currentPose = 'right'
 
 player.draw = function()
 {
+    if(input.keysDown.size > 0)
+    {
+        var sprite = player.poses[player.currentPose];
+        player.image = sprite.getImage();
+    }
     renderer.ctx.drawImage( player.image, player.x, player.y, player.width, player.height ); 
 };
 
@@ -35,19 +45,21 @@ player.move = function(x, y)
     /*Left/Right Movement*/
 
     // player holding left
-    if (input.keysDown.has(37) && player.velX > -player.speed) 
+    if (input.keysDown.has(65) && player.velX > -player.speed) 
     { 
         player.velX--; 
+        player.currentPose = 'left'
     }
     // player holding right
-    if (input.keysDown.has(39) && player.velX < player.speed) 
+    if (input.keysDown.has(68) && player.velX < player.speed) 
     { 
         player.velX++;
+        player.currentPose = 'right'
     }
     player.velX *= friction;
 
     /*Jumping*/
-    if ( (input.keysDown.has(38) || input.keysDown.has(32) ) && !player.isJumping) 
+    if ( (input.keysDown.has(87) || input.keysDown.has(32)) && !player.isJumping)
     { 
         player.isJumping = true;
         player.velY = -player.speed*2;
